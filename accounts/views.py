@@ -1,68 +1,52 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from .forms import UserRegistrationForm
-from django.contrib import messages
-from django.http import HttpResponse
+from .forms import LoginForm, RegisterForm
+from django.views.generic import View
+from django.db.models import Q
 
 
-def login_user(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
+class Login(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
+        login_form = LoginForm()
+        return render(request, 'accounts/login.html', context={'form': login_form})
 
-        if user is not None:
-            login(request, user)
-            redirect_url = request.GET.get('next', 'home')
-            return redirect(redirect_url)
-        else:
-            messages.error(request, "Username Or Password is incorrect!",
-                           extra_tags='alert alert-warning alert-dismissible fade show')
+    def post(self, request):
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            data = login_form.cleaned_data
+            user = authenticate(username=data['username'], password=data['password'])
+            if user is not None:
+                login(request, user)
+                redirect_url = request.GET.get('next', 'polls:list')
+                return redirect(redirect_url)
+            else:
+                login_form.add_error('username', 'Invalid User Data')
+        return render(request, 'accounts/login.html', context={'form': login_form})
 
-    return render(request, 'accounts/login.html')
+
+class Register(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
+        register_form = RegisterForm()
+        return render(request, 'accounts/register.html', {'form': register_form})
+
+    def post(self, request):
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            data = register_form.cleaned_data
+            if User.objects.filter(Q(username=data['username']) | Q(email=data['email'])).exists():
+                register_form.add_error('username', 'Username or Email already exists!')
+            else:
+                user = User.objects.create_user(username=data['username'], password=data['password1'], email=data['email'])
+                login(request, user)
+                return redirect('polls:list')
+        return render(request, 'accounts/register.html', {'form': register_form})
 
 
-def logout_user(request):
+def user_logout(request):
     logout(request)
     return redirect('home')
-
-
-def create_user(request):
-    if request.method == 'POST':
-        check1 = False
-        check2 = False
-        check3 = False
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password1 = form.cleaned_data['password1']
-            password2 = form.cleaned_data['password2']
-            email = form.cleaned_data['email']
-
-            if password1 != password2:
-                check1 = True
-                messages.error(request, 'Password did not match!',
-                               extra_tags='alert alert-warning alert-dismissible fade show')
-            if User.objects.filter(username=username).exists():
-                check2 = True
-                messages.error(request, 'Username already exists!',
-                               extra_tags='alert alert-warning alert-dismissible fade show')
-            if User.objects.filter(email=email).exists():
-                check3 = True
-                messages.error(request, 'Email already registered!',
-                               extra_tags='alert alert-warning alert-dismissible fade show')
-
-            if check1 or check2 or check3:
-                messages.error(
-                    request, "Registration Failed!", extra_tags='alert alert-warning alert-dismissible fade show')
-                return redirect('accounts:register')
-            else:
-                user = User.objects.create_user(
-                    username=username, password=password1, email=email)
-                messages.success(
-                    request, f'Thanks for registering {user.username}.', extra_tags='alert alert-success alert-dismissible fade show')
-                return redirect('accounts:login')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'accounts/register.html', {'form': form})

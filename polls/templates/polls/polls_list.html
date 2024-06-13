@@ -5,25 +5,28 @@
     <div class="row">
         <div class="col-md-8 offset-sm-2">
             <h1 class="text-center mb-5">Welcome to polls List!</h1>
+
             {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="messages">
+                    {% for message in messages %}
+                    <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
             {% endif %}
 
-            <a class="btn btn-{% if 'name' in request.GET %}warning{% else %}primary{% endif %} mb-3" href="?name=True"
-                role="button"><i class="fas fa-sort-alpha-down"></i>
-                Name</a>
-            <a class="btn btn-{% if 'date' in request.GET %}warning{% else %}primary{% endif %} mb-3" href="?date=True"
-                role="button"><i class="far fa-clock"></i> Date</a>
-            <a class="btn btn-{% if 'vote' in request.GET %}warning{% else %}primary{% endif %} mb-3" href="?vote=True"
-                role="button"><i class="fas fa-poll"></i> Vote</a>
+            <a class="btn btn-{% if 'name' in request.GET %}warning{% else %}primary{% endif %} mb-3" href="?name=True" role="button">
+                <i class="fas fa-sort-alpha-down"></i> Name
+            </a>
+            <a class="btn btn-{% if 'date' in request.GET %}warning{% else %}primary{% endif %} mb-3" href="?date=True" role="button">
+                <i class="far fa-clock"></i> Date
+            </a>
+            <a class="btn btn-{% if 'vote' in request.GET %}warning{% else %}primary{% endif %} mb-3" href="?vote=True" role="button">
+                <i class="fas fa-poll"></i> Vote
+            </a>
 
             <a class="btn btn-primary mb-3 float-right" href="{% url 'polls:add' %}" role="button">Add <i class="fas fa-plus"></i></a>
 
@@ -37,21 +40,21 @@
 
             <ul class="list-group">
                 {% for poll in polls %}
-                <li class="list-group-item"><a href="{% url 'polls:detail' poll.id %}">{{ poll.text|truncatewords:5 }}
-                        {% if not poll.active%}
-                        <i class="fas fa-check-circle ml-2"></i>
+                    <li class="list-group-item">
+                        <a href="{% url 'polls:detail' poll.id %}">{{ poll.text|truncatewords:5 }}
+                            {% if not poll.active%}
+                            <i class="fas fa-check-circle ml-2"></i>
+                            {% endif %}
+                        </a>
+                        {% if request.user == poll.owner %}
+                        {% if poll.active %}
+                        <a href="{% url 'polls:end_poll' poll.id %}" data-toggle="tooltip" data-placement="top" title="End Poll"
+                            onclick="return confirm('Are you sure ?')"><i class="fas fa-step-forward float-right btn btn-danger btn-sm"></i></a>
                         {% endif %}
-                    </a>
-                    {% if request.user == poll.owner %}
-                    {% if poll.active %}
-                    <a href="{% url 'polls:end_poll' poll.id %}" data-toggle="tooltip" data-placement="top" title="End Poll"
-                        onclick="return confirm('Are you sure ?')"><i class="fas fa-step-forward float-right btn btn-danger btn-sm"></i></a>
-                    {% endif %}
-                    <a href="{% url 'polls:edit' poll.id %}" class="mr-3" data-toggle="tooltip" data-placement="top"
-                        title="Edit Poll"><i class="fas fa-pencil-alt float-right btn btn-primary btn-sm mr-1"></i></a>
-                    {% endif %}
-                </li>
-
+                        <a href="{% url 'polls:edit' poll.id %}" class="mr-3" data-toggle="tooltip" data-placement="top"
+                            title="Edit Poll"><i class="fas fa-pencil-alt float-right btn btn-primary btn-sm mr-1"></i></a>
+                        {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
             {% if polls.paginator.num_pages > 1 %}
