@@ -1,35 +1,65 @@
-# Django-Poll-App
+<h1 align="center">🌟 Django Poll App 🌟</h1>
 
-Django poll app is a full featured polling app. You have to register in this app to show the polls and to vote. If you already voted you can not vote again. Only the owner of a poll can add poll , edit poll, update poll, delete poll , add choice, update choice, delete choice and end a poll. If a poll is ended it can not be voted. Ended poll only shows user the final result of the poll. There is a search option for polls. Also user can filter polls by name, publish date, and by number of voted. Pagination will work even after applying filter.
+<p align="center">Django poll app is a full featured polling app. You have to register in this app to show the polls and to vote. If you already voted you can not vote again. Only the owner of a poll can add poll , edit poll, update poll, delete poll , add choice, update choice, delete choice and end a poll. If a poll is ended it can not be voted. Ended poll only shows user the final result of the poll. There is a search option for polls. Also user can filter polls by name, publish date, and by number of voted. Pagination will work even after applying filter.</p>
 
-<h1>Getting Started</h1>
-<p>These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.</p>
+---
+<p>Parent repository: <a href="https://github.com/devmahmud/Django-Poll-App">Django-Poll-App</a> by devmahmud</p>
 
-<h2>Prerequisites</h2>
-<code>python== 3.5 or up and django==2.0 or up</code>
+---
 
-<h2>Installing</h2>
-<pre>open terminal and type</pre>
-<code>git clone https://github.com/devmahmud/Django-poll-app.git</code><br><br>
+## What has changed ? 🤔
+- Using Poetry instead of pip
+- Dockerizing the project
+- Adding extensive tests to check views and URLs
+- Adding the ability to log in with Instagram and GitHub (Facebook, Linkedin and Google already exists)
+- Converting all function-based views to class-based views
+- Some code clean up
+- Better README file
 
-<h4>or simply download using the url below</h4>
-<code>https://github.com/devmahmud/Django-poll-app.git</code><br>
+## 🛠 Installation
+1. **Clone the repository**
 
-<h2>To migrate the database open terminal in project directory and type</h2>
-<code>python manage.py makemigrations</code><br>
-<code>python manage.py migrate</code>
+   `git clone https://github.com/Aron-S-G-H/Django-Poll-App.git`
 
-<h2>To use admin panel you need to create superuser using this command </h2>
-<code>python manage.py createsuperuser</code>
+   then...
 
-<h2>To Create some dummy text data for your app follow the step below:</h2>
-<code>pip install faker</code>
-<code>python manage.py shell</code>
-<code>import seeder</code>
-<code>seeder.seed_all(30)</code>
-<p>Here 30 is a number of entry. You can use it as your own</p>
+   `cd Django-Poll_app`
 
-<h2> Configuring OAuth login </h2>
+2. **Create and activate a virtual environment**
+
+   `python3 -m venv venv` or `virtualenv venv`
+
+   then...
+
+   `source venv/bin/activate`
+
+3. **Install dependencies**
+
+   `pip install -r requirements.txt poetry`
+
+   then...
+
+   `poetry install`
+
+4. **Setup DB**
+
+   `python manage.py makemigrations` then `python manage.py migrate`
+
+5. **Create superuser for admin panel**
+
+   `python manage.py createsuperuser`
+
+6. **Create some dummy text**
+
+   `python manage.py shell` then `import seeder` then `seeder.seed_all(5)`
+
+   Here 5 is a number of entry. You can use it as your own
+
+7. **Start the app**
+
+   `python manage.py runserver`
+
+## 🔧 Configuring OAuth login
 <details>
 <summary>Obtaining OAuth Client ID for Google</summary>
 
@@ -72,7 +102,6 @@ Django poll app is a full featured polling app. You have to register in this app
 For detailed instructions, refer to Google's documentation on [OAuth 2.0](https://developers.google.com/identity/protocols/oauth2).
 </details>
 
-
 <details>
   <summary>Obtaining OAuth Client ID for LinkedIn</summary>
 
@@ -91,10 +120,41 @@ For detailed instructions, refer to Google's documentation on [OAuth 2.0](https:
      ```
 </details>
 
-<h2> To run the program in local server use the following command </h2>
-<code>python manage.py runserver</code>
+## 🚀 Run with Docker
+---
+<h4 align="center">⚠️ Ensure that you have Docker installed before you proceed</h4>
 
-<p>Then go to http://127.0.0.1:8000 in your browser</p>
+---
+1. clone the repository : `https://github.com/devmahmud/Django-Poll-App.git`
+2. go to the directory : `cd Django-Poll-App`
+3. create an image : `docker build -t pollsapp:latest --no-cache .`
+4. run a container : `docker run --name pollsapp -p 8000:8000 -d pollsapp:latest`
+5. Then go to http://127.0.0.1:8000 in your browser
+### if you want to create some dummy text data follow the step below
+1. after you run a container : `docker exec -it pollsapp bash`
+2. `python manage.py shell`
+3. `import seeder`
+4. create 5 dummy texts data : `seeder.seed_all(5)`
+### if you want to create super user
+1. after you run a container : `docker exec -it pollsapp bash`
+2. `python manage.py createsuperuser`
+#### for OAuth login , before you create an image, update the following settings in your Dockerfile
+```python
+   ENV GOOGLE_OAUTH2_KEY=your_client_id
+   ENV GOOGLE_OAUTH2_SECRET=your_client_secret
+   
+   ENV LINKEDIN_OAUTH2_KEY=your_client_id
+   ENV LINKEDIN_OAUTH2_SECRET=your_client_secret
+   
+   ENV FACEBOOK_OAUTH2_KEY=your_client_id
+   ENV FACEBOOK_OAUTH2_SECRET=your_client_secret
+   
+   ENV INSTAGRAM_OAUTH2_KEY=your_client_id
+   ENV INSTAGRAM_OAUTH2_SECRET=your_client_secret
+   
+   ENV GITHUB_KEY=your_client_id
+   ENV GITHUB_SECRET=your_client_secret
+ ```
 
 <h2>Project snapshot</h2>
 <h3>Home page</h3>
@@ -144,10 +204,6 @@ For detailed instructions, refer to Google's documentation on [OAuth 2.0](https:
 
 <h2>Author</h2>
 <blockquote>
-  Mahmudul alam<br>
-  Email: expelmahmud@gmail.com
+  Aron Sadegh<br>
+  Email: aronesadegh@gmail.com
 </blockquote>
-
-<div align="center">
-    <h3>========Thank You !!!=========</h3>
-</div>
