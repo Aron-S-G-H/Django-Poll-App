@@ -55,7 +55,11 @@
 
    Here 5 is a number of entry. You can use it as your own
 
-7. **Start the app**
+7. **Run tests to make sure everything is ok**
+
+   `python manage.py test`
+
+8. **Start the app**
 
    `python manage.py runserver`
 
