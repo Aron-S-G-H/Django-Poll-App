@@ -159,7 +159,7 @@ For detailed instructions, refer to Google's documentation on [OAuth 2.0](https:
 ## 📷 Project snapshot
 <h3>Home page</h3>
 <div align="center">
-    <img src="https://user-images.githubusercontent.com/19981097/51409444-0e40a600-1b8c-11e9-9ab0-27d759db8973.jpg" width="100%"</img> 
+    <img src="https://github.com/Aron-S-G-H/Django-Poll-App/blob/master/static/img/pic.png" width="100%"</img> 
 </div>
 
 <h3>Login Page</h3>
